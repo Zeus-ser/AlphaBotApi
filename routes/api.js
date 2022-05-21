@@ -3117,5 +3117,26 @@ router.get('/other/kbbi', async (req, res, next) => {
   res.json(loghandler.apikey)
 }
 })
+router.get('/others/qr', async (req, res, next) => {
+          var apikey = req.query.apikey
+       	if(!apikey) return res.json(loghandler.apikey)
+        if(listkey.includes(apikey)){
+       fetch(encodeURI(`https://gist.githubusercontent.com/Zeus-ser/deb790f618f1f624f631c55c73b28730/raw/26ab4a4f9abf756c543b5cefd118c070dbda13f6/qr.json`))
+        .then(response => response.json())
+        .then(async data => {
+        var result = data[Math.floor(Math.random() * data.length)];
+        var buffer = result.url;
+          data = await fetch(buffer).then(v => v.buffer())
+         await fs.writeFileSync(__path +'/tmp/alexa.jpg', data)
+        res.sendFile(__path+'/tmp/alexa.jpg')
+         })
+         .catch(e => {
+         	console.log(e);
+         	res.json(loghandler.error)
+})
+} else {
+  res.json(loghandler.apikey)
+}
+})
 
 module.exports = router
